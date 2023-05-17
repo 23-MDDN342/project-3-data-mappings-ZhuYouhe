@@ -13,7 +13,7 @@ var NUM_SLIDERS = 3;
 // here's some examples for colors used
 
 
-const stroke_color = [95, 52, 8];
+const stroke_color = [0, 0, 0];
 
 // example of a global function
 // given a segment, this returns the average point [x, y]
@@ -32,8 +32,8 @@ function segment_average(segment) {
 function Face() {
   // these are state variables for a face
   // (your variables should be different!)
-  this.detailColour = [204, 136, 17];
-  this.mainColour = [51, 119, 153];
+  this.detailColour = [73, 150, 65];
+  this.mainColour = [255, 253, 227];
   this.num_eyes = 2;    // can be either 1 (cyclops) or 2 (two eyes)
   this.eye_shift = -1;   // range is -10 to 10
   this.mouth_size = 1;  // range is 0.5 to 8
@@ -50,16 +50,35 @@ function Face() {
   this.draw = function(positions) {
     console.log()
     // head
+    push();
     ellipseMode(CENTER);
+    angleMode(DEGREES);
+    rectMode(CENTER);
     stroke(stroke_color);
     fill(this.mainColour);
-    ellipse(segment_average(positions.chin)[0], 0, 3, 4);
+    shearX(5);
+    rect(segment_average(positions.chin)[0]+1.5, 0, 3.6, 3, 0.9);
+    rect(segment_average(positions.chin)[0]+1, 0, 3.6, 3.5, 0.5);
+    push();
+    for (hatchingY = -1; hatchingY < 1.4; hatchingY += 0.1){
+      line(segment_average(positions.chin)[0]+2.8, hatchingY, segment_average(positions.chin)[0]+2.5-hatchingY*0.04, hatchingY-0.2);
+      line(segment_average(positions.chin)[0]+2.8, hatchingY, segment_average(positions.chin)[0]+3-hatchingY*0.02, hatchingY-0.1);
+      line(segment_average(positions.chin)[0]+2.8, hatchingY-0.2, segment_average(positions.chin)[0]+3-hatchingY*0.02, hatchingY);
+    }
+    pop();
+    shearX(-5);
+    rect(segment_average(positions.chin)[0]+0.5, 0, 3.5, 3.5, 0.2);
     noStroke();
+    fill(81, 81, 82);
+    rect(segment_average(positions.chin)[0], 0, 3.2, 3.2, 1.2);
+    pop();
 
 
     // mouth
     fill(this.detailColour);
-    ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
+    arc(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 
+    segment_average(positions.bottom_lip)[1]-segment_average(positions.bottom_lip)[0], 1 * this.mouth_size, 
+        0,180);
 
     // eyebrows
     fill( this.eyebrowColour);
@@ -67,6 +86,13 @@ function Face() {
     strokeWeight(0.08);
     this.draw_segment(positions.left_eyebrow);
     this.draw_segment(positions.right_eyebrow);
+    fill(this.detailColour);
+    arc(segment_average(positions.left_eyebrow)[0], segment_average(positions.left_eyebrow)[1], 
+        segment_average(positions.left_eyebrow)[1]-segment_average(positions.left_eyebrow)[0], 0.25 * this.mouth_size, 
+        180,360);
+    arc(segment_average(positions.right_eyebrow)[0], segment_average(positions.right_eyebrow)[1], 
+        segment_average(positions.right_eyebrow)[1]-segment_average(positions.right_eyebrow)[0], 0.25 * this.mouth_size, 
+        180,360);
 
     // draw the chin segment using points
     fill(this.chinColour);
@@ -110,9 +136,9 @@ function Face() {
       fill(this.mainColour);
       ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
     }
-   // fill(0)
-   //ellipse(0,0, 0.5,0.5) center point
-   //rect(-2,-2,4.5,4) sizing debug 
+   fill(255);
+   ellipse(0,0, 0.5,0.5); //center point
+  //  rect(-2,-2,4.5,4); //sizing debug 
   }
 
   // example of a function *inside* the face object.
