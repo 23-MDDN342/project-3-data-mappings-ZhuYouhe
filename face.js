@@ -54,6 +54,7 @@ function Face() {
     ellipseMode(CENTER);
     angleMode(DEGREES);
     rectMode(CENTER);
+    // blendMode(LIGHTEST);
     stroke(stroke_color);
     fill(this.mainColour);
     shearX(5);
@@ -142,9 +143,12 @@ function Face() {
     }
 
     // nose
+    push();
+    strokeWeight(0.08);
     // let noseTop = this.draw_segment(positions.nose_bridge);
     // let noseBottom = this.draw_segment(positions.nose_tip);
     line(positions.nose_bridge[0][0], positions.nose_bridge[0][1], positions.nose_tip[2][0], positions.nose_tip[2][1]);
+    pop();
 
     ///////////////////////////////
    fill(255);
