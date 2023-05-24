@@ -54,11 +54,20 @@ function Face() {
   this.draw = function(positions) {
     this.headPosX = positions.nose_bridge[0][0]; // Use nose coordinate as center of the face
     this.headPosY = positions.nose_bridge[3][1];
-    this.headWidth = positions.chin[16][0] - positions.chin[0][0];
-    this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1];
-    this.noseTipCenterX = positions.nose_tip[2][0];
-    // this.noseTipSize_right = abs(positions.nose_tip[4][0]);
-    this.roundCorner = 0;
+    this.headWidth = positions.chin[16][0] - positions.chin[0][0]; // Use 1st and last points of chin to get width
+    this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; // Top nose bridge point to bottom chin point
+    this.noseTipCenterX = positions.nose_tip[2][0]; // Center point of nose tip, to use for finding the offset of head left or right side
+    this.roundCorner = 0; // Radius of round corner (or tangent circle's radius)
+
+    this.topLeftCorner_X = this.headPosX - this.noseTipCenterX + this.headWidth / 2 - this.roundCorner;
+    this.topLeftCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner;
+    this.topRightCorner_X = this.headPosX - this.noseTipCenterX - this.headWidth / 2 + this.roundCorner;
+    this.topRightCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner;
+    this.bottomLeftCorner_X = this.headPosX - this.noseTipCenterX + this.headWidth / 2 - this.roundCorner;
+    this.bottomLeftCorner_Y = this.headPosY + this.headHeight*1.25 /2 - this.roundCorner;
+    this.bottomLeftCorner_X = this.headPosX - this.noseTipCenterX - this.headWidth / 2 + this.roundCorner;
+    this.bottomLeftCorner_Y = this.headPosY + this.headHeight*1.25 /2 - this.roundCorner;
+    
     // head
     
     ellipseMode(CENTER);
@@ -69,7 +78,7 @@ function Face() {
     fill(this.mainColour);
 
     push();
-    // shearX(5);
+    // Finding the short side of head to define the Radius
     if(this.headWidth < this.headHeight) {
       this.roundCorner = this.headWidth * 0.25; 
     } 
@@ -79,16 +88,17 @@ function Face() {
     // rect(segment_average(positions.chin)[0]+1.4, 0, 3.6, 3, 0.9);
     // rect(segment_average(positions.chin)[0]+1, 0, 3.6, 3.5, 0.5);
     rect(this.headPosX - this.noseTipCenterX *2.5, this.headPosY, this.headWidth*1.1, this.headHeight*1.25*1.1, this.roundCorner);
-    // shearX(-5);
+    
     rect(this.headPosX - this.noseTipCenterX * 1.5, this.headPosY, this.headWidth*1.1, this.headHeight*1.25*1.1, this.roundCorner * 0.6);
 
     push();
     // blendMode(HARD_LIGHT);
     // noStroke();
-    fill(255, 50, 50);
-    rect(this.headPosX - this.noseTipCenterX, this.headPosY, this.headWidth, this.headHeight*1.25, this.roundCorner * 2);
+    
     fill(this.mainColour);
     rect(this.headPosX - this.noseTipCenterX, this.headPosY, this.headWidth, this.headHeight*1.25, this.roundCorner * 2);
+
+    // Draw circle helper
     noFill();
     stroke('red');
     ellipse(this.headPosX - this.noseTipCenterX - this.headWidth / 2 + this.roundCorner * 2,
@@ -97,6 +107,20 @@ function Face() {
 
     strokeWeight(0.01);
     stroke(0);
+    // for(i=0;i<90;i+=5){
+    //   for(j=0;j<250-150;j+=4){
+       
+    //  line(topLeftCorner_X-cos(i)*this.roundCorner, topLeftCorner_Y-sin(i)*this.roundCorner,
+    //  topRightCorner_X+cos(i)*this.roundCorner, topRightCorner_Y-sin(i)*this.roundCorner);
+     
+    //  line(150-cos(i)*50, 250+sin(i)*50,
+    //      250+cos(i)*50, 275+sin(i)*50);
+    //  let a = map(j,0,250-150,65,115);
+    //     line(150-50*sin(a)*1.12, 150+j,
+    //      250+50, 125+j*1.5);
+    
+    //  }
+    // }
     for(topLeftCorner = 1; topLeftCorner < 90; topLeftCorner+=2){
       stroke(255, 0, 0);
       line(this.headPosX - this.noseTipCenterX - this.headWidth / 2 + this.roundCorner * 2 - cos(topLeftCorner) * this.roundCorner * 2,
@@ -178,13 +202,14 @@ function Face() {
     stroke(this.lipColour);
     this.draw_segment(positions.top_lip);
     this.draw_segment(positions.bottom_lip);
+    
+    ///////////////////////////////////////////////////////////////
+
+    // eyes
 
     let left_eye_pos = segment_average(positions.left_eye);
     let right_eye_pos = segment_average(positions.right_eye);
 
-    ///////////////////////////////////////////////////////////////
-
-    // eyes
     noStroke();
     let curEyeShift = 0.04 * this.eye_shift;
     if(this.num_eyes == 2) {
@@ -219,7 +244,7 @@ function Face() {
     pop();
 
     ///////////////////////////////////////////////////////////////
-   fill(255);
+   fill(0);
    ellipse(0,0, 0.1,0.1); //center point
   //  rect(-2,-2,4.5,4); //sizing debug 
   }
@@ -244,6 +269,10 @@ function Face() {
         }
     }
   };
+
+  this.draw_head = function(){
+    
+  }
 
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
