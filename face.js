@@ -42,10 +42,10 @@ function Face() {
   this.lipColour = [136, 68, 68];
   this.eyebrowColour = [59, 95, 120];
 
-  this.screenRed = [255, 15, 115, 70];
-  this.screenGreen = [38, 145, 40, 80];
-  this.screenBlue = [15, 107, 255, 70];
-  this.colorPick = [this.screenRed, this.screenGreen, this.screenBlue];
+  this.screenRed = [255, 15, 115];
+  this.screenGreen = [38, 145, 40];
+  this.screenBlue = [15, 107, 255];
+  this.colorOption = [this.screenRed, this.screenGreen, this.screenBlue];
   this.colorSwitch = 2;
 
   
@@ -83,7 +83,7 @@ function Face() {
     rectMode(CENTER);
     
     stroke(stroke_color);
-    strokeWeight(0.14);
+    strokeWeight(0.04);
     fill(this.mainColour);
 
     push();
@@ -107,22 +107,28 @@ function Face() {
     // rect(segment_average(positions.chin)[0]+1.4, 0, 3.6, 3, 0.9);
     // rect(segment_average(positions.chin)[0]+1, 0, 3.6, 3.5, 0.5);
     push();
-    translate(this.headOffset*0.22, 0);
+    // translate(this.headOffset*0.18, 0);
     fill(184, 182, 163);
+    rect(this.headPosX, this.headPosY, this.headWidth*1.2, this.headHeight*1.25*1.2, this.roundCorner*1.2);
+    pop();
+
+    push();
+    // translate(this.headOffset*0.12, 0);
     rect(this.headPosX, this.headPosY, this.headWidth*1.1, this.headHeight*1.25*1.1, this.roundCorner);
     pop();
 
     push();
-    translate(this.headOffset*0.15, 0);
-    rect(this.headPosX, this.headPosY, this.headWidth*1.1, this.headHeight*1.25*1.1, this.roundCorner * 0.9);
+    // strokeWeight(0.1);
+    // translate(this.headOffset*0.12, 0);
+    fill(50,50,50);
+    rect(this.headPosX - this.headOffset*0.05, this.headPosY - this.headOffset*0.05, this.headWidth*0.9, this.headHeight, this.roundCorner * 0.6);
     pop();
 
     push();
-    // blendMode(HARD_LIGHT);
-    // noStroke();
-    translate(this.headOffset*0.1, 0);
+    // strokeWeight(0.1);
+    // translate(this.headOffset*0.12, 0);
     fill(this.mainColour);
-    rect(this.headPosX, this.headPosY, this.headWidth, this.headHeight*1.25, this.roundCorner * 2);
+    rect(this.headPosX - this.headOffset*0.05, this.headPosY - this.headOffset*0.05, this.headWidth*0.8, this.headHeight*0.9, this.roundCorner * 1.2);
     pop();
 
     // Draw circle helper
@@ -137,49 +143,49 @@ function Face() {
     // ellipse(this.bottomRightCorner_X,this.bottomRightCorner_Y,this.roundCorner*4);
     pop();
 
-    push();
-    translate(this.headOffset*0.1, 0);
-    strokeWeight(0.1);
-    stroke(this.colorPick[this.colorSwitch]);
-    for(i=0;i<=90;i+=6){
-      // for(j=0;j<=this.bottomLeftCorner_Y-this.topLeftCorner_Y;j+=0.5){
-      //   stroke(15, 107, 255, 70);
-      //  let a = map(j,0,this.bottomLeftCorner_Y-this.topLeftCorner_Y,65,115);
-          // line(this.topLeftCorner_X - sin(a) * this.roundCorner * 2 * 1.12, this.topLeftCorner_Y+j,
-          //  this.topRightCorner_X + this.roundCorner * 2, this.topRightCorner_Y+j*1.5);
-      //      line(this.topLeftCorner_X - this.roundCorner * 2, this.topLeftCorner_Y+j,
-      //      this.topRightCorner_X + this.roundCorner * 2, this.topRightCorner_Y+j);
-      //  }
-    line(this.topLeftCorner_X-cos(i)*this.roundCorner * 2, this.topLeftCorner_Y-sin(i)*this.roundCorner * 2,
-          this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y-sin(i)*this.roundCorner * 2);
+    // push();
+    // translate(this.headOffset*0.1, 0);
+    // strokeWeight(0.1);
+    // stroke(this.colorOption[this.colorSwitch]);
+    // for(i=0;i<=90;i+=6){
+    //   // for(j=0;j<=this.bottomLeftCorner_Y-this.topLeftCorner_Y;j+=0.5){
+    //   //   stroke(15, 107, 255, 70);
+    //   //  let a = map(j,0,this.bottomLeftCorner_Y-this.topLeftCorner_Y,65,115);
+    //       // line(this.topLeftCorner_X - sin(a) * this.roundCorner * 2 * 1.12, this.topLeftCorner_Y+j,
+    //       //  this.topRightCorner_X + this.roundCorner * 2, this.topRightCorner_Y+j*1.5);
+    //   //      line(this.topLeftCorner_X - this.roundCorner * 2, this.topLeftCorner_Y+j,
+    //   //      this.topRightCorner_X + this.roundCorner * 2, this.topRightCorner_Y+j);
+    //   //  }
+    // line(this.topLeftCorner_X-cos(i)*this.roundCorner * 2, this.topLeftCorner_Y-sin(i)*this.roundCorner * 2,
+    //       this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y-sin(i)*this.roundCorner * 2);
      
-    line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y+sin(i)*this.roundCorner * 2,
-          this.bottomRightCorner_X+cos(i)*this.roundCorner * 2, this.bottomRightCorner_Y+sin(i)*this.roundCorner * 2);
-    }
+    // line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y+sin(i)*this.roundCorner * 2,
+    //       this.bottomRightCorner_X+cos(i)*this.roundCorner * 2, this.bottomRightCorner_Y+sin(i)*this.roundCorner * 2);
+    // }
     
-    for(i=5.5;i<=12;i+=6){
-    line(this.topLeftCorner_X-cos(i)*this.roundCorner * 2, this.topLeftCorner_Y+sin(i)*this.roundCorner * 2,
-          this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y+sin(i)*this.roundCorner * 2);
+    // for(i=5.5;i<=12;i+=6){
+    // line(this.topLeftCorner_X-cos(i)*this.roundCorner * 2, this.topLeftCorner_Y+sin(i)*this.roundCorner * 2,
+    //       this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y+sin(i)*this.roundCorner * 2);
      
-    line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y-sin(i)*this.roundCorner * 2,
-          this.bottomRightCorner_X+cos(i)*this.roundCorner * 2, this.bottomRightCorner_Y-sin(i)*this.roundCorner * 2);
-    }
-    pop();
+    // line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y-sin(i)*this.roundCorner * 2,
+    //       this.bottomRightCorner_X+cos(i)*this.roundCorner * 2, this.bottomRightCorner_Y-sin(i)*this.roundCorner * 2);
+    // }
+    // pop();
 
     pop();
 
     ///////////////////////////////////////////////////////////////
 
     // mouth
-    push();
-    stroke(0, 7, 56, 100);
-    noFill();
-    point(positions.top_lip[4][0], positions.top_lip[4][1]);
-    triangle(positions.top_lip[4][0], positions.top_lip[4][1], 
-      positions.bottom_lip[0][0], positions.bottom_lip[0][1]+this.mouth_size*0.1, 
-      positions.bottom_lip[6][0], positions.bottom_lip[6][1]+this.mouth_size*0.1);
+    // push();
+    // stroke(0, 7, 56, 100);
+    // noFill();
+    // point(positions.top_lip[4][0], positions.top_lip[4][1]);
+    // triangle(positions.top_lip[4][0], positions.top_lip[4][1], 
+    //   positions.bottom_lip[0][0], positions.bottom_lip[0][1]+this.mouth_size*0.1, 
+    //   positions.bottom_lip[6][0], positions.bottom_lip[6][1]+this.mouth_size*0.1);
     
-    pop();
+    // pop();
 
     ///////////////////////////////////////////////////////////////
 
@@ -222,37 +228,37 @@ function Face() {
     ///////////////////////////////////////////////////////////////
 
     // eyes
-    push();
-    let left_eye_pos = segment_average(positions.left_eye);
-    let right_eye_pos = segment_average(positions.right_eye);
+    // push();
+    // let left_eye_pos = segment_average(positions.left_eye);
+    // let right_eye_pos = segment_average(positions.right_eye);
 
-    blendMode(BURN);
-    noFill();
-    stroke(0, 7, 56, 100);
-    let curEyeShift = 0.04 * this.eye_shift;
-    if(this.num_eyes == 2) {
-      // fill(this.detailColour);
-      ellipse(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5);
-      ellipse(right_eye_pos[0]-0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5);
+    // // blendMode(BURN);
+    // noFill();
+    // stroke(0, 7, 56);
+    // let curEyeShift = 0.04 * this.eye_shift;
+    // if(this.num_eyes == 2) {
+    //   // fill(this.detailColour);
+    //   ellipse(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5);
+    //   ellipse(right_eye_pos[0]-0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5);
 
-      ellipse(left_eye_pos[0]+0.1 + curEyeShift, positions.nose_bridge[2][1], this.headHeight*0.2);
-      ellipse(right_eye_pos[0]-0.1 + curEyeShift, positions.nose_bridge[2][1], this.headHeight*0.2);
+    //   ellipse(left_eye_pos[0]+0.1 + curEyeShift, positions.nose_bridge[2][1], this.headHeight*0.2);
+    //   ellipse(right_eye_pos[0]-0.1 + curEyeShift, positions.nose_bridge[2][1], this.headHeight*0.2);
 
-      fill(0);
-      arc(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
-      arc(right_eye_pos[0]-0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
-    }
-    else {
-      let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
-      let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
+    //   fill(0);
+    //   arc(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
+    //   arc(right_eye_pos[0]-0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
+    // }
+    // else {
+    //   let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
+    //   let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
 
-      fill(this.detailColour);
-      ellipse(eyePosX, eyePosY, 0.45, 0.27);
+    //   fill(this.detailColour);
+    //   ellipse(eyePosX, eyePosY, 0.45, 0.27);
 
-      fill(this.mainColour);
-      ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
-    }
-    pop();
+    //   fill(this.mainColour);
+    //   ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
+    // }
+    // pop();
     ///////////////////////////////////////////////////////////////
 
     // nose
@@ -305,7 +311,7 @@ function Face() {
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
     let settings = new Array(3);
-    settings[0] = map(this.colorPick, 0, 2, 0, 100);
+    settings[0] = map(this.colorOption, 0, 2, 0, 100);
     settings[1] = map(this.eye_shift, -2, 2, 0, 100);
     settings[2] = map(this.mouth_size, 0.5, 8, 0, 100);
 
