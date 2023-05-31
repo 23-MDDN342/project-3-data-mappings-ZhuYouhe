@@ -2,4 +2,4 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11103452&assignment_repo_type=AssignmentRepo)
 ## 2023 MDDN342 Assignment 3: Data Mappings
 
-I've changed my mind. I'll draw the front view of the face and using solid colour with more details of the CRT head. Also I'll make the face more a TV set, as I can add knobs on it.
+The Knobs and screen 'test pattern' have been done.

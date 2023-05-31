@@ -58,14 +58,17 @@ function Face() {
   this.draw = function(positions) {
     this.headPosX = positions.nose_bridge[0][0]; // Use nose coordinate as center of the face
     this.headPosY = positions.nose_bridge[3][1];
-    this.headWidth = positions.chin[16][0] - positions.chin[0][0]; // Use 1st and last points of chin to get width
-    this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; // Top nose bridge point to bottom chin point
+    // this.headWidth = positions.chin[16][0] - positions.chin[0][0]; // Use 1st and last points of chin to get width
+    // this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; // Top nose bridge point to bottom chin point
+    this.headWidth = 4;
+    this.headHeight = 2.5;
     this.noseTipCenterX = positions.nose_tip[2][0]; // Center point of nose tip, to use for finding the offset of head left or right side
-    this.roundCorner; // Radius of round corner (or tangent circle's radius)
+    this.roundCorner = 0.8; // Radius of round corner (or tangent circle's radius)
     this.headSize_L = positions.nose_tip[2][0] - positions.chin[2][0]; // Size of left side head
     this.headSize_R = positions.chin[14][0] - positions.nose_tip[2][0]; // Size of right side head
     this.headOffset;
-    this.headOffsetRatio;
+    this.eyePos_X;
+    this.eyePos_Y;
 
     this.topLeftCorner_X = this.headPosX - this.headWidth / 2 + this.roundCorner * 2;
     this.topLeftCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner * 2;
@@ -83,26 +86,32 @@ function Face() {
     rectMode(CENTER);
     
     stroke(stroke_color);
-    strokeWeight(0.04);
+    strokeWeight(0.03);
     fill(this.mainColour);
 
     push();
     // Finding the short side of head to define the Radius
-    if(this.headWidth < this.headHeight) {
-      this.roundCorner = this.headWidth * 0.25; 
-    } 
-    else if(this.headWidth > this.headHeight){
-      this.roundCorner = this.headHeight * 0.25;
-    }
+    // if(this.headWidth < this.headHeight) {
+    //   this.roundCorner = this.headWidth * 0.25; 
+    // } 
+    // else if(this.headWidth > this.headHeight){
+    //   this.roundCorner = this.headHeight * 0.25;
+    // }
 
     // To get the facing direction
     if(this.headSize_L < this.headSize_R){
-      this.headOffset = this.headSize_R * (this.headSize_R / this.headSize_L);
-      this.headOffsetRatio = this.headSize_R / this.headSize_L;
+      this.headOffset = -this.headWidth * 1.5;
+      this.eyePos_X = 1.5;
+      this.eyePos_Y = -0.9;
+      // this.headOffset = this.headSize_R * (this.headSize_R / this.headSize_L);
+      // this.headOffsetRatio = this.headSize_R / this.headSize_L;
     }
     else if(this.headSize_L > this.headSize_R){
-      this.headOffset = -this.headSize_L * (this.headSize_L / this.headSize_R);
-      this.headOffsetRatio = this.headSize_L / this.headSize_R;
+      this.headOffset = this.headWidth * 1.5;
+      this.eyePos_X = -1.5;
+      this.eyePos_Y = -0.9;
+      // this.headOffset = -this.headSize_L * (this.headSize_L / this.headSize_R);
+      // this.headOffsetRatio = this.headSize_L / this.headSize_R;
     }
     // rect(segment_average(positions.chin)[0]+1.4, 0, 3.6, 3, 0.9);
     // rect(segment_average(positions.chin)[0]+1, 0, 3.6, 3.5, 0.5);
@@ -114,21 +123,34 @@ function Face() {
 
     push();
     // translate(this.headOffset*0.12, 0);
-    rect(this.headPosX, this.headPosY, this.headWidth*1.1, this.headHeight*1.25*1.1, this.roundCorner);
+    rect(this.headPosX, this.headPosY, this.headWidth*1.14, this.headHeight*1.25*1.14, this.roundCorner);
     pop();
 
     push();
     // strokeWeight(0.1);
     // translate(this.headOffset*0.12, 0);
     fill(50,50,50);
-    rect(this.headPosX - this.headOffset*0.05, this.headPosY - this.headOffset*0.05, this.headWidth*0.9, this.headHeight, this.roundCorner * 0.6);
+    rect(this.headPosX + this.headOffset*0.07, this.headPosY, this.headWidth*0.85, this.headHeight*1.25*1.05, this.roundCorner * 0.8);
     pop();
 
     push();
     // strokeWeight(0.1);
     // translate(this.headOffset*0.12, 0);
     fill(this.mainColour);
-    rect(this.headPosX - this.headOffset*0.05, this.headPosY - this.headOffset*0.05, this.headWidth*0.8, this.headHeight*0.9, this.roundCorner * 1.2);
+    rect(this.headPosX + this.headOffset*0.07, this.headPosY, this.headWidth*0.75, this.headHeight*1.25*0.9, this.roundCorner * 1);
+    pop();
+
+    // Draw the 'Test Pattern' screen
+    push();
+    noStroke();
+    fill('#F2D479');
+    rect(this.headPosX + this.headOffset*0.07 - 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * 1);
+    fill('#485922');
+    rect(this.headPosX + this.headOffset*0.07 + 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * 1);
+    fill('#F26A1B');
+    rect(this.headPosX + this.headOffset*0.07 - 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89, this.roundCorner * 0);
+    fill('#4480A6');
+    rect(this.headPosX + this.headOffset*0.07 + 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89, this.roundCorner * 0);
     pop();
 
     // Draw circle helper
@@ -227,38 +249,43 @@ function Face() {
     
     ///////////////////////////////////////////////////////////////
 
-    // eyes
-    // push();
-    // let left_eye_pos = segment_average(positions.left_eye);
-    // let right_eye_pos = segment_average(positions.right_eye);
+    // Knobs (eyes)
+    push();
+    let left_eye_pos = segment_average(positions.left_eye);
+    let right_eye_pos = segment_average(positions.right_eye);
 
-    // // blendMode(BURN);
-    // noFill();
-    // stroke(0, 7, 56);
-    // let curEyeShift = 0.04 * this.eye_shift;
-    // if(this.num_eyes == 2) {
-    //   // fill(this.detailColour);
-    //   ellipse(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5);
-    //   ellipse(right_eye_pos[0]-0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5);
+    // blendMode(BURN);
+    noFill();
+    stroke(0, 7, 56);
+    let curEyeShift = 0.04 * this.eye_shift;
+    if(this.num_eyes == 2) {
+      fill(this.detailColour);
+      ellipse(this.eyePos_X, this.eyePos_Y, this.headHeight*0.3);
+      ellipse(this.eyePos_X, this.eyePos_Y+1, this.headHeight*0.3);
+      fill(this.mainColour);
+      ellipse(this.eyePos_X, this.eyePos_Y, this.headHeight*0.2);
+      ellipse(this.eyePos_X, this.eyePos_Y+1, this.headHeight*0.2);
+      rect(this.eyePos_X, this.eyePos_Y, this.headHeight*0.2, this.headHeight*0.05);
+      rect(this.eyePos_X, this.eyePos_Y+1, this.headHeight*0.2, this.headHeight*0.05);
 
-    //   ellipse(left_eye_pos[0]+0.1 + curEyeShift, positions.nose_bridge[2][1], this.headHeight*0.2);
-    //   ellipse(right_eye_pos[0]-0.1 + curEyeShift, positions.nose_bridge[2][1], this.headHeight*0.2);
+      rect(this.eyePos_X, this.eyePos_Y+2, this.headHeight*0.3, this.headWidth*0.2, 0.1);
 
-    //   fill(0);
-    //   arc(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
-    //   arc(right_eye_pos[0]-0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
-    // }
-    // else {
-    //   let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
-    //   let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
+      // Eye lids
+      // fill(0);
+      // arc(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
+      // arc(right_eye_pos[0]-0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
+    }
+    else {
+      let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
+      let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
 
-    //   fill(this.detailColour);
-    //   ellipse(eyePosX, eyePosY, 0.45, 0.27);
+      fill(this.detailColour);
+      ellipse(eyePosX, eyePosY, 0.45, 0.27);
 
-    //   fill(this.mainColour);
-    //   ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
-    // }
-    // pop();
+      fill(this.mainColour);
+      ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
+    }
+    pop();
     ///////////////////////////////////////////////////////////////
 
     // nose
