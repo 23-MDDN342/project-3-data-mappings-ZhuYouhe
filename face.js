@@ -42,10 +42,10 @@ function Face() {
   this.lipColour = [136, 68, 68];
   this.eyebrowColour = [59, 95, 120];
 
-  this.screenRed = [255, 15, 115];
-  this.screenGreen = [38, 145, 40];
-  this.screenBlue = [15, 107, 255];
-  this.colorOption = [this.screenRed, this.screenGreen, this.screenBlue];
+  this.screenLight = ['#D9D1C7', '#F2B3D1', '#CEB3F2', '#BF946F'];
+  this.screenNeutral = ['#F2D479', '#F26A1B', '#4480A6', '#485922'];
+  this.screenDark = ['#D99B29', '#A60815', '#2E7B8C', '#012623'];
+  this.colorOption = [this.screenLight, this.screenNeutral, this.screenDark];
   this.colorSwitch = 2;
 
   
@@ -67,8 +67,9 @@ function Face() {
     this.headSize_L = positions.nose_tip[2][0] - positions.chin[2][0]; // Size of left side head
     this.headSize_R = positions.chin[14][0] - positions.nose_tip[2][0]; // Size of right side head
     this.headOffset;
-    this.eyePos_X;
-    this.eyePos_Y;
+    this.knobPos_X;
+    this.knobPos_Y_up = this.headPosY - 1.1;
+    this.knobPos_Y_down = this.headPosY - 0.2;
 
     this.topLeftCorner_X = this.headPosX - this.headWidth / 2 + this.roundCorner * 2;
     this.topLeftCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner * 2;
@@ -100,18 +101,22 @@ function Face() {
 
     // To get the facing direction
     if(this.headSize_L < this.headSize_R){
-      this.headOffset = -this.headWidth * 1.5;
-      this.eyePos_X = 1.5;
-      this.eyePos_Y = -0.9;
-      // this.headOffset = this.headSize_R * (this.headSize_R / this.headSize_L);
-      // this.headOffsetRatio = this.headSize_R / this.headSize_L;
+      this.headOffset = -this.headWidth;
+      this.knobPos_X = this.headPosX - this.headOffset*0.44;
+
+      this.leftColorBar = 0; // Screen color bar from light to dark when screen on the left side
+      this.leftMidColorBar = 1;
+      this.rightMidColorBar = 2;
+      this.rightColorBar = 3;
     }
     else if(this.headSize_L > this.headSize_R){
-      this.headOffset = this.headWidth * 1.5;
-      this.eyePos_X = -1.5;
-      this.eyePos_Y = -0.9;
-      // this.headOffset = -this.headSize_L * (this.headSize_L / this.headSize_R);
-      // this.headOffsetRatio = this.headSize_L / this.headSize_R;
+      this.headOffset = this.headWidth;
+      this.knobPos_X = this.headPosX - this.headOffset*0.44;
+
+      this.leftColorBar = 3; // Screen color bar from dark to light when screen on the right side
+      this.leftMidColorBar = 2;
+      this.rightMidColorBar = 1;
+      this.rightColorBar = 0;
     }
     // rect(segment_average(positions.chin)[0]+1.4, 0, 3.6, 3, 0.9);
     // rect(segment_average(positions.chin)[0]+1, 0, 3.6, 3.5, 0.5);
@@ -130,27 +135,28 @@ function Face() {
     // strokeWeight(0.1);
     // translate(this.headOffset*0.12, 0);
     fill(50,50,50);
-    rect(this.headPosX + this.headOffset*0.07, this.headPosY, this.headWidth*0.85, this.headHeight*1.25*1.05, this.roundCorner * 0.8);
+    rect(this.headPosX + this.headOffset*0.105, this.headPosY, this.headWidth*0.85, this.headHeight*1.25*1.05, this.roundCorner * 0.8);
     pop();
 
     push();
     // strokeWeight(0.1);
     // translate(this.headOffset*0.12, 0);
     fill(this.mainColour);
-    rect(this.headPosX + this.headOffset*0.07, this.headPosY, this.headWidth*0.75, this.headHeight*1.25*0.9, this.roundCorner * 1);
+    rect(this.headPosX + this.headOffset*0.105, this.headPosY, this.headWidth*0.75, this.headHeight*1.25*0.9, this.roundCorner * 1);
     pop();
 
     // Draw the 'Test Pattern' screen
     push();
+    
     noStroke();
-    fill('#F2D479');
-    rect(this.headPosX + this.headOffset*0.07 - 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * 1);
-    fill('#485922');
-    rect(this.headPosX + this.headOffset*0.07 + 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * 1);
-    fill('#F26A1B');
-    rect(this.headPosX + this.headOffset*0.07 - 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89, this.roundCorner * 0);
-    fill('#4480A6');
-    rect(this.headPosX + this.headOffset*0.07 + 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89, this.roundCorner * 0);
+    fill(this.colorOption[this.colorSwitch][this.leftColorBar]);
+    rect(this.headPosX + this.headOffset*0.105 - 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * 1);
+    fill(this.colorOption[this.colorSwitch][this.rightColorBar]);
+    rect(this.headPosX + this.headOffset*0.105 + 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * 1);
+    fill(this.colorOption[this.colorSwitch][this.leftMidColorBar]);
+    rect(this.headPosX + this.headOffset*0.105 - 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89, this.roundCorner * 0);
+    fill(this.colorOption[this.colorSwitch][this.rightMidColorBar]);
+    rect(this.headPosX + this.headOffset*0.105 + 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89, this.roundCorner * 0);
     pop();
 
     // Draw circle helper
@@ -254,21 +260,22 @@ function Face() {
     let left_eye_pos = segment_average(positions.left_eye);
     let right_eye_pos = segment_average(positions.right_eye);
 
-    // blendMode(BURN);
     noFill();
     stroke(0, 7, 56);
     let curEyeShift = 0.04 * this.eye_shift;
     if(this.num_eyes == 2) {
       fill(this.detailColour);
-      ellipse(this.eyePos_X, this.eyePos_Y, this.headHeight*0.3);
-      ellipse(this.eyePos_X, this.eyePos_Y+1, this.headHeight*0.3);
+      ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.3);
+      ellipse(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.3);
       fill(this.mainColour);
-      ellipse(this.eyePos_X, this.eyePos_Y, this.headHeight*0.2);
-      ellipse(this.eyePos_X, this.eyePos_Y+1, this.headHeight*0.2);
-      rect(this.eyePos_X, this.eyePos_Y, this.headHeight*0.2, this.headHeight*0.05);
-      rect(this.eyePos_X, this.eyePos_Y+1, this.headHeight*0.2, this.headHeight*0.05);
+      ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.2);
+      ellipse(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.2);
 
-      rect(this.eyePos_X, this.eyePos_Y+2, this.headHeight*0.3, this.headWidth*0.2, 0.1);
+
+      rect(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.2, this.headHeight*0.05);
+      rect(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.2, this.headHeight*0.05);
+
+      rect(this.knobPos_X, this.knobPos_Y_down+1, this.headHeight*0.3, this.headWidth*0.2, 0.1);
 
       // Eye lids
       // fill(0);
