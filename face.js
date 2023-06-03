@@ -7,7 +7,7 @@
 var DEBUG_MODE = true;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 3;
+var NUM_SLIDERS = 6;
 
 // other variables can be in here too
 // here's some examples for colors used
@@ -35,8 +35,9 @@ function Face() {
   this.detailColour = [93, 120, 185];
   this.mainColour = [255, 253, 227];
   this.num_eyes = 2;    // can be either 1 (cyclops) or 2 (two eyes)
-  this.eye_shift = -1;   // range is -10 to 10
-  this.mouth_size = 1;  // range is 0.5 to 8
+  this.knobRot_up = 90;   // Rotation of upper knob, range is 0 to 180
+  this.knobRot_down = 90;   // Rotation of lower knob, range is 0 to 180
+  this.speaker_size = 27;  // Speaker lines' number (size), range is 17 to 57
 
   this.chinColour = [153, 153, 51];
   this.lipColour = [136, 68, 68];
@@ -77,10 +78,10 @@ function Face() {
     this.topRightCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner * 2;
     this.bottomLeftCorner_X = this.headPosX - this.headWidth / 2 + this.roundCorner * 2;
     this.bottomLeftCorner_Y = this.headPosY + this.headHeight*1.25 /2 - this.roundCorner * 2;
-    this.bottomRightCorner_X = this.headPosX + this.headWidth / 2 - this.roundCorner * 2;
-    this.bottomRightCorner_Y = this.headPosY + this.headHeight*1.25 /2 - this.roundCorner * 2;
+    this.speakerPos_X;
+    this.speakerPos_Y = this.headPosY + (this.headHeight * 1.25 * 1.14) / 2 - this.roundCorner * 1;
     
-    // head
+    // TV/Monitor main shape and screen
     
     ellipseMode(CENTER);
     angleMode(DEGREES);
@@ -103,6 +104,7 @@ function Face() {
     if(this.headSize_L < this.headSize_R){
       this.headOffset = -this.headWidth;
       this.knobPos_X = this.headPosX - this.headOffset*0.44;
+      this.speakerPos_X = this.headPosX + (this.headWidth *1.14) / 2 - this.roundCorner * 1;
 
       this.leftColorBar = 0; // Screen color bar from light to dark when screen on the left side
       this.leftMidColorBar = 1;
@@ -112,6 +114,7 @@ function Face() {
     else if(this.headSize_L > this.headSize_R){
       this.headOffset = this.headWidth;
       this.knobPos_X = this.headPosX - this.headOffset*0.44;
+      this.speakerPos_X = this.headPosX - (this.headWidth *1.14) / 2 + this.roundCorner * 1;
 
       this.leftColorBar = 3; // Screen color bar from dark to light when screen on the right side
       this.leftMidColorBar = 2;
@@ -168,7 +171,7 @@ function Face() {
     // ellipse(this.topLeftCorner_X,this.topLeftCorner_Y,this.roundCorner*4);
     // ellipse(this.topRightCorner_X,this.topRightCorner_Y,this.roundCorner*4);
     // ellipse(this.bottomLeftCorner_X,this.bottomLeftCorner_Y,this.roundCorner*4);
-    // ellipse(this.bottomRightCorner_X,this.bottomRightCorner_Y,this.roundCorner*4);
+    // ellipse(this.speakerPos_X,this.speakerPos_Y,this.roundCorner*4);
     pop();
 
     // push();
@@ -188,7 +191,7 @@ function Face() {
     //       this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y-sin(i)*this.roundCorner * 2);
      
     // line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y+sin(i)*this.roundCorner * 2,
-    //       this.bottomRightCorner_X+cos(i)*this.roundCorner * 2, this.bottomRightCorner_Y+sin(i)*this.roundCorner * 2);
+    //       this.speakerPos_X+cos(i)*this.roundCorner * 2, this.speakerPos_Y+sin(i)*this.roundCorner * 2);
     // }
     
     // for(i=5.5;i<=12;i+=6){
@@ -196,7 +199,7 @@ function Face() {
     //       this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y+sin(i)*this.roundCorner * 2);
      
     // line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y-sin(i)*this.roundCorner * 2,
-    //       this.bottomRightCorner_X+cos(i)*this.roundCorner * 2, this.bottomRightCorner_Y-sin(i)*this.roundCorner * 2);
+    //       this.speakerPos_X+cos(i)*this.roundCorner * 2, this.speakerPos_Y-sin(i)*this.roundCorner * 2);
     // }
     // pop();
 
@@ -204,16 +207,38 @@ function Face() {
 
     ///////////////////////////////////////////////////////////////
 
-    // mouth
-    // push();
-    // stroke(0, 7, 56, 100);
-    // noFill();
-    // point(positions.top_lip[4][0], positions.top_lip[4][1]);
-    // triangle(positions.top_lip[4][0], positions.top_lip[4][1], 
-    //   positions.bottom_lip[0][0], positions.bottom_lip[0][1]+this.mouth_size*0.1, 
-    //   positions.bottom_lip[6][0], positions.bottom_lip[6][1]+this.mouth_size*0.1);
+    // Draw speaker (mouth)
+    push();
+    stroke(50,50,50);
+    noFill();
+    strokeWeight(0.1);
+    // rect(this.knobPos_X, this.knobPos_Y_down+1, this.headHeight*0.3, this.headWidth*0.2, 0.1);
+    // rect(this.headPosX, this.headPosY, this.headWidth*1.14, this.headHeight*1.25*1.14, this.roundCorner);
+    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 0.8, this.knobPos_X + 0.3, this.knobPos_Y_down + 0.8);
+    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 1, this.knobPos_X + 0.3, this.knobPos_Y_down + 1);
     
-    // pop();
+    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 1.2, this.knobPos_X + 0.3, this.knobPos_Y_down + 1.2);
+    // ellipse(this.speakerPos_X, this.speakerPos_Y, this.roundCorner * 2);
+    // stroke('red');
+    if(this.headSize_L < this.headSize_R){
+       this.speakerPos_X = this.headPosX + (this.headWidth *1.14) / 2 - this.roundCorner * 1;
+       for(i=0;i<this.speaker_size;i=i*1.15+16.1){
+        line(this.speakerPos_X, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7, 
+          this.speakerPos_X + cos(i)*this.roundCorner * 0.7, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7);
+          line(this.speakerPos_X, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7,
+          this.speakerPos_X + cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
+      }
+    }
+    else if(this.headSize_L > this.headSize_R){      
+      this.speakerPos_X = this.headPosX - (this.headWidth *1.14) / 2 + this.roundCorner * 1;
+      for(i=0;i<this.speaker_size;i=i*1.15+16.1){
+        line(this.speakerPos_X, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7, 
+          this.speakerPos_X - cos(i)*this.roundCorner * 0.7, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7);
+          line(this.speakerPos_X, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7,
+          this.speakerPos_X - cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
+      }
+    } 
+    pop();
 
     ///////////////////////////////////////////////////////////////
 
@@ -262,7 +287,7 @@ function Face() {
 
     noFill();
     stroke(0, 7, 56);
-    // let curEyeShift = 0.04 * this.eye_shift;
+    // let curEyeShift = 0.04 * this.knobRot_up;
     if(this.num_eyes == 2) {
       fill(this.detailColour);
       ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.3);
@@ -273,17 +298,15 @@ function Face() {
 
       push();
       translate(this.knobPos_X, this.knobPos_Y_up);
-      rotate(90);
+      rotate(this.knobRot_up);
       rect(0, 0, this.headHeight*0.25, this.headHeight*0.05);
       pop();
       push();
       translate(this.knobPos_X, this.knobPos_Y_down);
-      rotate(30);
+      rotate(this.knobRot_down);
       rect(0, 0, this.headHeight*0.25, this.headHeight*0.05);
       pop();
-
-      rect(this.knobPos_X, this.knobPos_Y_down+1, this.headHeight*0.3, this.headWidth*0.2, 0.1);
-
+      
       // Eye lids
       // fill(0);
       // arc(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
@@ -345,16 +368,18 @@ function Face() {
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
     this.colorSwitch = int(map(settings[0], 0, 100, 0, 2));
-    this.eye_shift = map(settings[1], 0, 100, -2, 2);
-    this.mouth_size = map(settings[2], 0, 100, 0.5, 8);
+    this.knobRot_up = map(settings[1], 0, 100, 0, 180);
+    this.knobRot_down = map(settings[2], 0, 100, 0, 180);
+    this.speaker_size = map(settings[3], 0, 100, 16, 57);
   }
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
     let settings = new Array(3);
     settings[0] = map(this.colorOption, 0, 2, 0, 100);
-    settings[1] = map(this.eye_shift, -2, 2, 0, 100);
-    settings[2] = map(this.mouth_size, 0.5, 8, 0, 100);
+    settings[1] = map(this.knobRot_up, 0, 180, 0, 100);
+    settings[2] = map(this.knobRot_down, 0, 180, 0, 100);
+    settings[3] = map(this.speaker_size, 16, 57, 0, 100);
 
     return settings;
   }
