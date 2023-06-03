@@ -1,4 +1,4 @@
-/*
+/*this.detailColour
  * FaceMap class - holds all informaiton about one mapped
  * face and is able to draw itself.
  */  
@@ -57,29 +57,29 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
-    this.headPosX = positions.nose_bridge[0][0]; // Use nose coordinate as center of the face
-    this.headPosY = positions.nose_bridge[3][1];
-    // this.headWidth = positions.chin[16][0] - positions.chin[0][0]; // Use 1st and last points of chin to get width
-    // this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; // Top nose bridge point to bottom chin point
-    this.headWidth = 4;
-    this.headHeight = 2.5;
-    this.noseTipCenterX = positions.nose_tip[2][0]; // Center point of nose tip, to use for finding the offset of head left or right side
-    this.roundCorner = 0.8; // Radius of round corner (or tangent circle's radius)
-    this.headSize_L = positions.nose_tip[2][0] - positions.chin[2][0]; // Size of left side head
-    this.headSize_R = positions.chin[14][0] - positions.nose_tip[2][0]; // Size of right side head
-    this.headOffset;
-    this.knobPos_X;
-    this.knobPos_Y_up = this.headPosY - 1.1;
-    this.knobPos_Y_down = this.headPosY - 0.2;
+    let headPosX = positions.nose_bridge[0][0]; // Use nose coordinate as center of the face
+    let headPosY = positions.nose_bridge[3][1];
+    // headWidth = positions.chin[16][0] - positions.chin[0][0]; // Use 1st and last points of chin to get width
+    // headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; // Top nose bridge point to bottom chin point
+    let headWidth = 4;
+    let headHeight = 2.5;
+    // this.noseTipCenterX = positions.nose_tip[2][0]; // Center point of nose tip, to use for finding the offset of head left or right side
+    let roundCorner = 0.8; // Radius of round corner (or tangent circle's radius)
+    let headSize_L = positions.nose_tip[2][0] - positions.chin[2][0]; // Size of left side head
+    let headSize_R = positions.chin[14][0] - positions.nose_tip[2][0]; // Size of right side head
+    let headOffset;
+    let knobPos_X;
+    let knobPos_Y_up = headPosY - 1.1;
+    let knobPos_Y_down = headPosY - 0.2;
 
-    this.topLeftCorner_X = this.headPosX - this.headWidth / 2 + this.roundCorner * 2;
-    this.topLeftCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner * 2;
-    this.topRightCorner_X = this.headPosX + this.headWidth / 2 - this.roundCorner * 2;
-    this.topRightCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner * 2;
-    this.bottomLeftCorner_X = this.headPosX - this.headWidth / 2 + this.roundCorner * 2;
-    this.bottomLeftCorner_Y = this.headPosY + this.headHeight*1.25 /2 - this.roundCorner * 2;
+    // this.topLeftCorner_X = headPosX - headWidth / 2 + roundCorner * 2;
+    // this.topLeftCorner_Y = headPosY - headHeight*1.25 /2 + roundCorner * 2;
+    // this.topRightCorner_X = headPosX + headWidth / 2 - roundCorner * 2;
+    // this.topRightCorner_Y = headPosY - headHeight*1.25 /2 + roundCorner * 2;
+    // this.bottomLeftCorner_X = headPosX - headWidth / 2 + roundCorner * 2;
+    // this.bottomLeftCorner_Y = headPosY + headHeight*1.25 /2 - roundCorner * 2;
     this.speakerPos_X;
-    this.speakerPos_Y = this.headPosY + (this.headHeight * 1.25 * 1.14) / 2 - this.roundCorner * 1;
+    this.speakerPos_Y = headPosY + (headHeight * 1.25 * 1.14) / 2 - roundCorner * 1;
     
     // TV/Monitor main shape and screen
     
@@ -93,28 +93,28 @@ function Face() {
 
     push();
     // Finding the short side of head to define the Radius
-    // if(this.headWidth < this.headHeight) {
-    //   this.roundCorner = this.headWidth * 0.25; 
+    // if(headWidth < headHeight) {
+    //   roundCorner = headWidth * 0.25; 
     // } 
-    // else if(this.headWidth > this.headHeight){
-    //   this.roundCorner = this.headHeight * 0.25;
+    // else if(headWidth > headHeight){
+    //   roundCorner = headHeight * 0.25;
     // }
 
     // To get the facing direction
-    if(this.headSize_L < this.headSize_R){
-      this.headOffset = -this.headWidth;
-      this.knobPos_X = this.headPosX - this.headOffset*0.44;
-      this.speakerPos_X = this.headPosX + (this.headWidth *1.14) / 2 - this.roundCorner * 1;
+    if(headSize_L < headSize_R){
+      headOffset = -headWidth;
+      knobPos_X = headPosX - headOffset*0.44;
+      this.speakerPos_X = headPosX + (headWidth *1.14) / 2 - roundCorner * 1;
 
       this.leftColorBar = 0; // Screen color bar from light to dark when screen on the left side
       this.leftMidColorBar = 1;
       this.rightMidColorBar = 2;
       this.rightColorBar = 3;
     }
-    else if(this.headSize_L > this.headSize_R){
-      this.headOffset = this.headWidth;
-      this.knobPos_X = this.headPosX - this.headOffset*0.44;
-      this.speakerPos_X = this.headPosX - (this.headWidth *1.14) / 2 + this.roundCorner * 1;
+    else if(headSize_L > headSize_R){
+      headOffset = headWidth;
+      knobPos_X = headPosX - headOffset*0.44;
+      this.speakerPos_X = headPosX - (headWidth *1.14) / 2 + roundCorner * 1;
 
       this.leftColorBar = 3; // Screen color bar from dark to light when screen on the right side
       this.leftMidColorBar = 2;
@@ -124,82 +124,82 @@ function Face() {
     // rect(segment_average(positions.chin)[0]+1.4, 0, 3.6, 3, 0.9);
     // rect(segment_average(positions.chin)[0]+1, 0, 3.6, 3.5, 0.5);
     push();
-    // translate(this.headOffset*0.18, 0);
+    // translate(headOffset*0.18, 0);
     fill(184, 182, 163);
-    rect(this.headPosX, this.headPosY, this.headWidth*1.2, this.headHeight*1.25*1.2, this.roundCorner*1.2);
+    rect(headPosX, headPosY, headWidth*1.2, headHeight*1.25*1.2, roundCorner*1.2);
     pop();
 
     push();
-    // translate(this.headOffset*0.12, 0);
-    rect(this.headPosX, this.headPosY, this.headWidth*1.14, this.headHeight*1.25*1.14, this.roundCorner);
+    // translate(headOffset*0.12, 0);
+    rect(headPosX, headPosY, headWidth*1.14, headHeight*1.25*1.14, roundCorner);
     pop();
 
     push();
     // strokeWeight(0.1);
-    // translate(this.headOffset*0.12, 0);
+    // translate(headOffset*0.12, 0);
     fill(50,50,50);
-    rect(this.headPosX + this.headOffset*0.105, this.headPosY, this.headWidth*0.85, this.headHeight*1.25*1.05, this.roundCorner * 0.8);
+    rect(headPosX + headOffset*0.105, headPosY, headWidth*0.85, headHeight*1.25*1.05, roundCorner * 0.8);
     pop();
 
     push();
     // strokeWeight(0.1);
-    // translate(this.headOffset*0.12, 0);
+    // translate(headOffset*0.12, 0);
     fill(this.mainColour);
-    rect(this.headPosX + this.headOffset*0.105, this.headPosY, this.headWidth*0.75, this.headHeight*1.25*0.9, this.roundCorner * 1);
+    rect(headPosX + headOffset*0.105, headPosY, headWidth*0.75, headHeight*1.25*0.9, roundCorner * 1);
     pop();
 
     // Draw the 'Test Pattern' screen
     push();
     
     noStroke();
-    fill(this.colorOption[this.colorSwitch][this.leftColorBar]);
-    rect(this.headPosX + this.headOffset*0.105 - 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * 1);
-    fill(this.colorOption[this.colorSwitch][this.rightColorBar]);
-    rect(this.headPosX + this.headOffset*0.105 + 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * 1);
-    fill(this.colorOption[this.colorSwitch][this.leftMidColorBar]);
-    rect(this.headPosX + this.headOffset*0.105 - 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89, this.roundCorner * 0);
-    fill(this.colorOption[this.colorSwitch][this.rightMidColorBar]);
-    rect(this.headPosX + this.headOffset*0.105 + 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89, this.roundCorner * 0);
+    fill(this.colorOption[this.colorSwitch][this.leftColorBar]); // Left colour bar
+    rect(headPosX + headOffset*0.105 - 0.75, headPosY, headWidth*0.75*0.5, headHeight*1.25*0.89, roundCorner * 1);
+    fill(this.colorOption[this.colorSwitch][this.rightColorBar]); // Right colour bar
+    rect(headPosX + headOffset*0.105 + 0.75, headPosY, headWidth*0.75*0.5, headHeight*1.25*0.89, roundCorner * 1);
+    fill(this.colorOption[this.colorSwitch][this.leftMidColorBar]); // Middle left colour bar
+    rect(headPosX + headOffset*0.105 - 0.375, headPosY, headWidth*0.75*0.25, headHeight*1.25*0.89, roundCorner * 0);
+    fill(this.colorOption[this.colorSwitch][this.rightMidColorBar]); // Middle right colour bar
+    rect(headPosX + headOffset*0.105 + 0.375, headPosY, headWidth*0.75*0.25, headHeight*1.25*0.89, roundCorner * 0);
     pop();
 
     // Draw circle helper
     push();
-    translate(this.headOffset*0.1, 0);
+    translate(headOffset*0.1, 0);
     noFill();
     stroke(255, 153, 145);
     strokeWeight(0.02);
-    // ellipse(this.topLeftCorner_X,this.topLeftCorner_Y,this.roundCorner*4);
-    // ellipse(this.topRightCorner_X,this.topRightCorner_Y,this.roundCorner*4);
-    // ellipse(this.bottomLeftCorner_X,this.bottomLeftCorner_Y,this.roundCorner*4);
-    // ellipse(this.speakerPos_X,this.speakerPos_Y,this.roundCorner*4);
+    // ellipse(this.topLeftCorner_X,this.topLeftCorner_Y,roundCorner*4);
+    // ellipse(this.topRightCorner_X,this.topRightCorner_Y,roundCorner*4);
+    // ellipse(this.bottomLeftCorner_X,this.bottomLeftCorner_Y,roundCorner*4);
+    // ellipse(this.speakerPos_X,this.speakerPos_Y,roundCorner*4);
     pop();
 
     // push();
-    // translate(this.headOffset*0.1, 0);
+    // translate(headOffset*0.1, 0);
     // strokeWeight(0.1);
     // stroke(this.colorOption[this.colorSwitch]);
     // for(i=0;i<=90;i+=6){
     //   // for(j=0;j<=this.bottomLeftCorner_Y-this.topLeftCorner_Y;j+=0.5){
     //   //   stroke(15, 107, 255, 70);
     //   //  let a = map(j,0,this.bottomLeftCorner_Y-this.topLeftCorner_Y,65,115);
-    //       // line(this.topLeftCorner_X - sin(a) * this.roundCorner * 2 * 1.12, this.topLeftCorner_Y+j,
-    //       //  this.topRightCorner_X + this.roundCorner * 2, this.topRightCorner_Y+j*1.5);
-    //   //      line(this.topLeftCorner_X - this.roundCorner * 2, this.topLeftCorner_Y+j,
-    //   //      this.topRightCorner_X + this.roundCorner * 2, this.topRightCorner_Y+j);
+    //       // line(this.topLeftCorner_X - sin(a) * roundCorner * 2 * 1.12, this.topLeftCorner_Y+j,
+    //       //  this.topRightCorner_X + roundCorner * 2, this.topRightCorner_Y+j*1.5);
+    //   //      line(this.topLeftCorner_X - roundCorner * 2, this.topLeftCorner_Y+j,
+    //   //      this.topRightCorner_X + roundCorner * 2, this.topRightCorner_Y+j);
     //   //  }
-    // line(this.topLeftCorner_X-cos(i)*this.roundCorner * 2, this.topLeftCorner_Y-sin(i)*this.roundCorner * 2,
-    //       this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y-sin(i)*this.roundCorner * 2);
+    // line(this.topLeftCorner_X-cos(i)*roundCorner * 2, this.topLeftCorner_Y-sin(i)*roundCorner * 2,
+    //       this.topRightCorner_X+cos(i)*roundCorner * 2, this.topRightCorner_Y-sin(i)*roundCorner * 2);
      
-    // line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y+sin(i)*this.roundCorner * 2,
-    //       this.speakerPos_X+cos(i)*this.roundCorner * 2, this.speakerPos_Y+sin(i)*this.roundCorner * 2);
+    // line(this.bottomLeftCorner_X-cos(i)*roundCorner * 2, this.bottomLeftCorner_Y+sin(i)*roundCorner * 2,
+    //       this.speakerPos_X+cos(i)*roundCorner * 2, this.speakerPos_Y+sin(i)*roundCorner * 2);
     // }
     
     // for(i=5.5;i<=12;i+=6){
-    // line(this.topLeftCorner_X-cos(i)*this.roundCorner * 2, this.topLeftCorner_Y+sin(i)*this.roundCorner * 2,
-    //       this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y+sin(i)*this.roundCorner * 2);
+    // line(this.topLeftCorner_X-cos(i)*roundCorner * 2, this.topLeftCorner_Y+sin(i)*roundCorner * 2,
+    //       this.topRightCorner_X+cos(i)*roundCorner * 2, this.topRightCorner_Y+sin(i)*roundCorner * 2);
      
-    // line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y-sin(i)*this.roundCorner * 2,
-    //       this.speakerPos_X+cos(i)*this.roundCorner * 2, this.speakerPos_Y-sin(i)*this.roundCorner * 2);
+    // line(this.bottomLeftCorner_X-cos(i)*roundCorner * 2, this.bottomLeftCorner_Y-sin(i)*roundCorner * 2,
+    //       this.speakerPos_X+cos(i)*roundCorner * 2, this.speakerPos_Y-sin(i)*roundCorner * 2);
     // }
     // pop();
 
@@ -212,30 +212,30 @@ function Face() {
     stroke(50,50,50);
     noFill();
     strokeWeight(0.1);
-    // rect(this.knobPos_X, this.knobPos_Y_down+1, this.headHeight*0.3, this.headWidth*0.2, 0.1);
-    // rect(this.headPosX, this.headPosY, this.headWidth*1.14, this.headHeight*1.25*1.14, this.roundCorner);
-    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 0.8, this.knobPos_X + 0.3, this.knobPos_Y_down + 0.8);
-    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 1, this.knobPos_X + 0.3, this.knobPos_Y_down + 1);
+    // rect(knobPos_X, knobPos_Y_down+1, headHeight*0.3, headWidth*0.2, 0.1);
+    // rect(headPosX, headPosY, headWidth*1.14, headHeight*1.25*1.14, roundCorner);
+    // line(knobPos_X - 0.3, knobPos_Y_down + 0.8, knobPos_X + 0.3, knobPos_Y_down + 0.8);
+    // line(knobPos_X - 0.3, knobPos_Y_down + 1, knobPos_X + 0.3, knobPos_Y_down + 1);
     
-    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 1.2, this.knobPos_X + 0.3, this.knobPos_Y_down + 1.2);
-    // ellipse(this.speakerPos_X, this.speakerPos_Y, this.roundCorner * 2);
+    // line(knobPos_X - 0.3, knobPos_Y_down + 1.2, knobPos_X + 0.3, knobPos_Y_down + 1.2);
+    // ellipse(this.speakerPos_X, this.speakerPos_Y, roundCorner * 2);
     // stroke('red');
-    if(this.headSize_L < this.headSize_R){
-       this.speakerPos_X = this.headPosX + (this.headWidth *1.14) / 2 - this.roundCorner * 1;
+    if(headSize_L < headSize_R){
+       this.speakerPos_X = headPosX + (headWidth *1.14) / 2 - roundCorner * 1;
        for(i=0;i<this.speaker_size;i=i*1.15+16.1){
-        line(this.speakerPos_X, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7, 
-          this.speakerPos_X + cos(i)*this.roundCorner * 0.7, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7);
-          line(this.speakerPos_X, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7,
-          this.speakerPos_X + cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
+        line(this.speakerPos_X, this.speakerPos_Y + sin(i)*roundCorner * 0.7, 
+          this.speakerPos_X + cos(i)*roundCorner * 0.7, this.speakerPos_Y + sin(i)*roundCorner * 0.7);
+          line(this.speakerPos_X, this.speakerPos_Y - sin(i)*roundCorner * 0.7,
+          this.speakerPos_X + cos(0)*roundCorner * 0.7, this.speakerPos_Y - sin(i)*roundCorner * 0.7);
       }
     }
-    else if(this.headSize_L > this.headSize_R){      
-      this.speakerPos_X = this.headPosX - (this.headWidth *1.14) / 2 + this.roundCorner * 1;
+    else if(headSize_L > headSize_R){      
+      this.speakerPos_X = headPosX - (headWidth *1.14) / 2 + roundCorner * 1;
       for(i=0;i<this.speaker_size;i=i*1.15+16.1){
-        line(this.speakerPos_X, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7, 
-          this.speakerPos_X - cos(i)*this.roundCorner * 0.7, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7);
-          line(this.speakerPos_X, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7,
-          this.speakerPos_X - cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
+        line(this.speakerPos_X, this.speakerPos_Y + sin(i)*roundCorner * 0.7, 
+          this.speakerPos_X - cos(i)*roundCorner * 0.7, this.speakerPos_Y + sin(i)*roundCorner * 0.7);
+          line(this.speakerPos_X, this.speakerPos_Y - sin(i)*roundCorner * 0.7,
+          this.speakerPos_X - cos(0)*roundCorner * 0.7, this.speakerPos_Y - sin(i)*roundCorner * 0.7);
       }
     } 
     pop();
@@ -280,7 +280,7 @@ function Face() {
     
     ///////////////////////////////////////////////////////////////
 
-    // Knobs (eyes)
+    // Draw Knobs (eyes)
     push();
     let left_eye_pos = segment_average(positions.left_eye);
     let right_eye_pos = segment_average(positions.right_eye);
@@ -288,44 +288,39 @@ function Face() {
     noFill();
     stroke(0, 7, 56);
     // let curEyeShift = 0.04 * this.knobRot_up;
-    if(this.num_eyes == 2) {
+    // if(this.num_eyes == 2) {
       fill(this.detailColour);
-      ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.3);
-      ellipse(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.3);
+      ellipse(knobPos_X, knobPos_Y_up, headHeight*0.3);
+      ellipse(knobPos_X, knobPos_Y_down, headHeight*0.3);
       fill(this.mainColour);
-      ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.2);
-      ellipse(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.2);
+      ellipse(knobPos_X, knobPos_Y_up, headHeight*0.2);
+      ellipse(knobPos_X, knobPos_Y_down, headHeight*0.2);
 
       push();
-      translate(this.knobPos_X, this.knobPos_Y_up);
+      translate(knobPos_X, knobPos_Y_up);
       rotate(this.knobRot_up);
-      rect(0, 0, this.headHeight*0.25, this.headHeight*0.05);
+      rect(0, 0, headHeight*0.25, headHeight*0.05);
       pop();
       push();
-      translate(this.knobPos_X, this.knobPos_Y_down);
+      translate(knobPos_X, knobPos_Y_down);
       rotate(this.knobRot_down);
-      rect(0, 0, this.headHeight*0.25, this.headHeight*0.05);
+      rect(0, 0, headHeight*0.25, headHeight*0.05);
       pop();
-      
-      // Eye lids
-      // fill(0);
-      // arc(left_eye_pos[0]+0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
-      // arc(right_eye_pos[0]-0.1, positions.nose_bridge[2][1], this.headHeight*0.5, this.headHeight*0.5, 180, 360, CHORD);
-    }
-    else {
-      let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
-      let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
+    // }
+    // else {
+    //   let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
+    //   let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
 
-      fill(this.detailColour);
-      ellipse(eyePosX, eyePosY, 0.45, 0.27);
+    //   fill(this.detailColour);
+    //   ellipse(eyePosX, eyePosY, 0.45, 0.27);
 
-      fill(this.mainColour);
-      ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
-    }
+    //   fill(this.mainColour);
+    //   ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
+    // }
     pop();
     ///////////////////////////////////////////////////////////////
 
-    // nose
+    // Draw Antenna
     push();
     strokeWeight(0.08);
     stroke(255);
