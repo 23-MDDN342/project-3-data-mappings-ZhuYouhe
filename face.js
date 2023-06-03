@@ -262,7 +262,7 @@ function Face() {
 
     noFill();
     stroke(0, 7, 56);
-    let curEyeShift = 0.04 * this.eye_shift;
+    // let curEyeShift = 0.04 * this.eye_shift;
     if(this.num_eyes == 2) {
       fill(this.detailColour);
       ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.3);
@@ -271,9 +271,16 @@ function Face() {
       ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.2);
       ellipse(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.2);
 
-
-      rect(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.2, this.headHeight*0.05);
-      rect(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.2, this.headHeight*0.05);
+      push();
+      translate(this.knobPos_X, this.knobPos_Y_up);
+      rotate(90);
+      rect(0, 0, this.headHeight*0.25, this.headHeight*0.05);
+      pop();
+      push();
+      translate(this.knobPos_X, this.knobPos_Y_down);
+      rotate(30);
+      rect(0, 0, this.headHeight*0.25, this.headHeight*0.05);
+      pop();
 
       rect(this.knobPos_X, this.knobPos_Y_down+1, this.headHeight*0.3, this.headWidth*0.2, 0.1);
 
