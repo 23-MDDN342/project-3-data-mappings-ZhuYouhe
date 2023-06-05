@@ -7,7 +7,7 @@
 var DEBUG_MODE = true;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 8;
+var NUM_SLIDERS = 9;
 
 // other variables can be in here too
 // here's some examples for colors used
@@ -33,18 +33,19 @@ function Face() {
   // these are state variables for a face
   // (your variables should be different!)
   
-  this.cornerOptions = [0.3, 1]; // Change the corners radius between 0.3 and 1
+  this.faceDirection = 0;    // Facing direction range 0 to 100, under 50 facing left, above 50 facing right
+  this.cornerOptions = [0.3, 1];    // Change the corners radius between 0.3 and 1
   this.cornerChange = 1;
-  this.antennaRot_left = 45;    // Left antenna rotation, range is 0 to 90
-  this.antennaRot_right = -45;    // Right antenna rotation, rang is 0 to 90
+  this.antenna_rotation = 45;    // Antenna rotation, rang is 0 to 90
   this.antenna_length = 0.2;    // Antenna length, range is 1 to 3
   this.knobRotations = [0, 30, 45, 60, 90, 120, 135, 150, 180];    // Knobs rotation range
   this.knobRot_up = 0;   // Rotation of upper knob, range is 0 to 8 int
   this.knobRot_down = 0;   // Rotation of lower knob, range is 0 to 8 int
   this.speaker_size = 27;  // Speaker lines' number (size), range is 10 to 60
 
-  this.detailColour = [93, 120, 185];
+  this.knobColour = [93, 120, 185];
   this.mainColour = [255, 253, 227];
+
   // this.chinColour = [153, 153, 51];
   // this.lipColour = [136, 68, 68];
   // this.eyebrowColour = [59, 95, 120];
@@ -53,8 +54,9 @@ function Face() {
   this.screenNeutral = ['#F2D479', '#F26A1B', '#4480A6', '#485922'];
   this.screenDark = ['#D99B29', '#A60815', '#2E7B8C', '#012623'];
   this.colorOption = [this.screenLight, this.screenNeutral, this.screenDark];
-  this.colorSwitch = 2;
-
+  this.screenColour = 1;  // Three options of screen colours, range is 0 to 2
+  this.antennaColour = 0;  // Two options of antenna colours, range is 0 to 1
+  this.antennaColourCur;  // Current antenna colour
   
 
   /*
@@ -100,7 +102,7 @@ function Face() {
 
     ///////////////////////////////////////////////////////////////
     // To get the facing direction
-    if(this.headSize_L < this.headSize_R){
+    if(this.faceDirection <= 50){ // Facing left, screen on the left side
       this.headOffset = -this.headWidth;
       this.antennaPos_X =  this.headPosX - this.headOffset*0.1;
       this.knobPos_X = this.headPosX - this.headOffset*0.44;
@@ -111,7 +113,7 @@ function Face() {
       this.rightMidColorBar = 2;
       this.rightColorBar = 3;
     }
-    else if(this.headSize_L > this.headSize_R){
+    else if(this.faceDirection > 50){ // Facing right, screen on the right side
       this.headOffset = this.headWidth;
       this.antennaPos_X =  this.headPosX - this.headOffset*0.1;
       this.knobPos_X = this.headPosX - this.headOffset*0.44;
@@ -122,6 +124,47 @@ function Face() {
       this.rightMidColorBar = 1;
       this.rightColorBar = 0;
     }
+    ///////////////////////////////////////////////////////////////
+
+    // Draw antenna (eyebrows)
+    if (this.antennaColour <= 50){
+        this.antennaColourCur = this.mainColour;
+    } else{
+        this.antennaColourCur = ['#A69B86'];
+    }
+    push();
+      push();
+      translate(this.antennaPos_X, this.antennaPos_Y-0.1);
+      rotate(this.antenna_rotation);
+      stroke(stroke_color);
+      strokeWeight(0.25);
+      line(0, 0, -this.antenna_size - this.antenna_length, 0);
+      stroke(this.antennaColourCur);
+      strokeWeight(0.2);
+      line(0, 0, -this.antenna_size - this.antenna_length, 0);
+      stroke(stroke_color);
+      fill(this.antennaColourCur);
+      strokeWeight(0.03);
+      ellipse(-this.antenna_size - this.antenna_length, 0, 0.5);
+      pop();
+      push();
+      translate(this.antennaPos_X, this.antennaPos_Y-0.1);
+      rotate(-this.antenna_rotation);
+      stroke(stroke_color);
+      strokeWeight(0.25);
+      line(0, 0, this.antenna_size + this.antenna_length, 0);
+      stroke(this.antennaColourCur);
+      strokeWeight(0.2);
+      line(0, 0, this.antenna_size + this.antenna_length, 0);
+      stroke(stroke_color);
+      fill(this.antennaColourCur);
+      strokeWeight(0.03);
+      ellipse(this.antenna_size + this.antenna_length, 0, 0.5);
+      pop();
+    
+    fill(184, 182, 163);
+    arc(this.antennaPos_X, this.antennaPos_Y, this.antenna_size * 0.8, this.antenna_size * 0.5, 180, 360, CHORD);
+    pop();
     ///////////////////////////////////////////////////////////////
 
     // Draw TV/Monitor main shape and screen
@@ -157,20 +200,20 @@ function Face() {
     push();
     
     noStroke();
-    fill(this.colorOption[this.colorSwitch][this.leftColorBar]);
+    fill(this.colorOption[this.screenColour][this.leftColorBar]);
     rect(this.headPosX + this.headOffset*0.105 - 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * this.cornerOptions[this.cornerChange]);
-    fill(this.colorOption[this.colorSwitch][this.rightColorBar]);
+    fill(this.colorOption[this.screenColour][this.rightColorBar]);
     rect(this.headPosX + this.headOffset*0.105 + 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * this.cornerOptions[this.cornerChange]);
-    fill(this.colorOption[this.colorSwitch][this.leftMidColorBar]);
+    fill(this.colorOption[this.screenColour][this.leftMidColorBar]);
     rect(this.headPosX + this.headOffset*0.105 - 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89);
-    fill(this.colorOption[this.colorSwitch][this.rightMidColorBar]);
+    fill(this.colorOption[this.screenColour][this.rightMidColorBar]);
     rect(this.headPosX + this.headOffset*0.105 + 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89);
     pop();
 
     // push();
     // translate(this.headOffset*0.1, 0);
     // strokeWeight(0.1);
-    // stroke(this.colorOption[this.colorSwitch]);
+    // stroke(this.colorOption[this.screenColour]);
     // for(i=0;i<=90;i+=6){
     //   // for(j=0;j<=this.bottomLeftCorner_Y-this.topLeftCorner_Y;j+=0.5){
     //   //   stroke(15, 107, 255, 70);
@@ -199,33 +242,7 @@ function Face() {
     pop();
     ///////////////////////////////////////////////////////////////
 
-    // Draw antenna (eyebrows)
-    push();
-      push();
-      translate(this.antennaPos_X, this.antennaPos_Y-0.1);
-      rotate(this.antennaRot_left);
-      stroke(stroke_color);
-      strokeWeight(0.13);
-      line(0, 0, -this.antenna_size - this.antenna_length, 0);
-      stroke(this.mainColour);
-      strokeWeight(0.1);
-      line(0, 0, -this.antenna_size - this.antenna_length, 0);
-      pop();
-      push();
-      translate(this.antennaPos_X, this.antennaPos_Y-0.1);
-      rotate(this.antennaRot_right);
-      stroke(stroke_color);
-      strokeWeight(0.13);
-      line(0, 0, this.antenna_size + this.antenna_length, 0);
-      stroke(this.mainColour);
-      strokeWeight(0.1);
-      line(0, 0, this.antenna_size + this.antenna_length, 0);
-      pop();
     
-    fill(184, 182, 163);
-    arc(this.antennaPos_X, this.antennaPos_Y, this.antenna_size * 0.8, this.antenna_size * 0.5, 180, 360, CHORD);
-    pop();
-    ///////////////////////////////////////////////////////////////
 
     // Draw Knobs (eyes)
     push();
@@ -236,7 +253,7 @@ function Face() {
     stroke(0, 7, 56);
     // let curEyeShift = 0.04 * this.knobRot_up;
     // if(this.num_eyes == 2) {
-      fill(this.detailColour);
+      fill(this.knobColour);
       ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.3);
       ellipse(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.3);
       fill(this.mainColour);
@@ -258,7 +275,7 @@ function Face() {
     //   let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
     //   let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
 
-    //   fill(this.detailColour);
+    //   fill(this.knobColour);
     //   ellipse(eyePosX, eyePosY, 0.45, 0.27);
 
     //   fill(this.mainColour);
@@ -280,7 +297,7 @@ function Face() {
     // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 1.2, this.knobPos_X + 0.3, this.knobPos_Y_down + 1.2);
     // ellipse(this.speakerPos_X, this.speakerPos_Y, this.roundCorner * 2);
     // stroke('red');
-    if(this.headSize_L < this.headSize_R){
+    if(this.faceDirection <= 50){
        this.speakerPos_X = this.headPosX + (this.headWidth *1.14) / 2 - this.roundCorner * 1;
 
        line(this.speakerPos_X, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7, 
@@ -293,7 +310,7 @@ function Face() {
           this.speakerPos_X + cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
       }
     }
-    else if(this.headSize_L > this.headSize_R){      
+    else if(this.faceDirection > 50){      
       this.speakerPos_X = this.headPosX - (this.headWidth *1.14) / 2 + this.roundCorner * 1;
 
       line(this.speakerPos_X, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7,
@@ -375,27 +392,29 @@ function Face() {
 
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
-    this.colorSwitch = int(map(settings[0], 0, 100, 0, 2.9));
+    this.screenColour = int(map(settings[0], 0, 100, 0, 2));
     this.cornerChange = int(map(settings[1], 0, 100, 0, 1));
-    this.antennaRot_left = map(settings[2], 0, 100, 0, 90);
-    this.antennaRot_right = map(settings[3], 0, 100, 0, -90);
+    this.antennaColour = map(settings[2], 0, 100, 0, 100);
+    this.antenna_rotation = map(settings[3], 0, 100, 0, 90);
     this.antenna_length = map(settings[4], 0, 100, -0.5, 0.5);
     this.knobRot_up = int(map(settings[5], 0, 100, 0, 8.9));
     this.knobRot_down = int(map(settings[6], 0, 100, 0, 8.9));
     this.speaker_size = map(settings[7], 0, 100, 10, 60);
+    this.faceDirection = map(settings[8], 0, 100, 0, 100);
   }
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
     let settings = new Array(3);
-    settings[0] = map(this.colorOption, 0, 2.9, 0, 100);
+    settings[0] = map(this.screenColour, 0, 2, 0, 100);
     settings[1] = map(this.cornerChange, 0, 1, 0, 100);
-    settings[2] = map(this.antennaRot_left, 0, 90, 0, 100);
-    settings[3] = map(this.antennaRot_right, 0, -90, 0, 100);
+    settings[2] = map(this.antennaColour, 0, 100, 0, 100);
+    settings[3] = map(this.antenna_rotation, 0, 90, 0, 100);
     settings[4] = map(this.antenna_length, -0.5, 0.5, 0, 100);
     settings[5] = map(this.knobRot_up, 0, 8.9, 0, 100);
     settings[6] = map(this.knobRot_down, 0, 8.9, 0, 100);
     settings[7] = map(this.speaker_size, 10, 60, 0, 100);
+    settings[8] = map(this.speaker_size, 0, 100, 0, 100);
 
     return settings;
   }
