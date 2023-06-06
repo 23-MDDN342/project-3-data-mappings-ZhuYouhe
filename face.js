@@ -38,9 +38,9 @@ function Face() {
   this.cornerChange = 1;
   this.antenna_rotation = 45;    // Antenna rotation, rang is 0 to 90
   this.antenna_length = 0.2;    // Antenna length, range is 1 to 3
-  this.knobRotations = [0, 30, 45, 60, 90, 120, 135, 150, 180];    // Knobs rotation range
-  this.knobRot_up = 0;   // Rotation of upper knob, range is 0 to 8 int
-  this.knobRot_down = 0;   // Rotation of lower knob, range is 0 to 8 int
+  this.knobRotations = [-60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165];    // Knobs rotation range 0 to 15
+  this.knobRot_up = 10;   // Rotation of upper knob, range is 15 to 5 int, default in vertical direction at 90 degree, from 165 to 15 degree
+  this.knobRot_down = 4;   // Rotation of lower knob, range is 0 to 8 int, default in horizontal direction at 0 degree, from -60 to 60 degree
   this.speaker_size = 27;  // Speaker lines' number (size), range is 10 to 60
 
   this.knobColour = [93, 120, 185];
@@ -397,8 +397,8 @@ function Face() {
     this.antennaColour = map(settings[2], 0, 100, 0, 100);
     this.antenna_rotation = map(settings[3], 0, 100, 0, 90);
     this.antenna_length = map(settings[4], 0, 100, -0.5, 0.5);
-    this.knobRot_up = int(map(settings[5], 0, 100, 0, 8.9));
-    this.knobRot_down = int(map(settings[6], 0, 100, 0, 8.9));
+    this.knobRot_up = int(map(settings[5], 0, 100, 15, 5));
+    this.knobRot_down = int(map(settings[6], 0, 100, 0, 8));
     this.speaker_size = map(settings[7], 0, 100, 10, 60);
     this.faceDirection = map(settings[8], 0, 100, 0, 100);
   }
@@ -411,10 +411,10 @@ function Face() {
     settings[2] = map(this.antennaColour, 0, 100, 0, 100);
     settings[3] = map(this.antenna_rotation, 0, 90, 0, 100);
     settings[4] = map(this.antenna_length, -0.5, 0.5, 0, 100);
-    settings[5] = map(this.knobRot_up, 0, 8.9, 0, 100);
-    settings[6] = map(this.knobRot_down, 0, 8.9, 0, 100);
+    settings[5] = map(this.knobRot_up, 15, 5, 0, 100);
+    settings[6] = map(this.knobRot_down, 0, 8, 0, 100);
     settings[7] = map(this.speaker_size, 10, 60, 0, 100);
-    settings[8] = map(this.speaker_size, 0, 100, 0, 100);
+    settings[8] = map(this.faceDirection, 0, 100, 0, 100);
 
     return settings;
   }
