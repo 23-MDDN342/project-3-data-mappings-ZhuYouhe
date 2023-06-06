@@ -28,27 +28,23 @@ function segment_average(segment) {
   return [sum_x / s_len , sum_y / s_len ];
 }
 
+
 // This where you define your own face object
 function Face() {
   // these are state variables for a face
-  // (your variables should be different!)
   
   this.faceDirection = 0;    // Facing direction range 0 to 100, under 50 facing left, above 50 facing right
   this.cornerOptions = [0.3, 1];    // Change the corners radius between 0.3 and 1
   this.cornerChange = 1;
   this.antenna_rotation = 45;    // Antenna rotation, rang is 0 to 90
-  this.antenna_length = 0.2;    // Antenna length, range is 1 to 3
-  this.knobRotations = [-60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165];    // Knobs rotation range 0 to 15
+  this.antenna_length = 0.2;    // Antenna length, range is -0.5 to 0.5
+  this.knobRotations = [-60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165];    // Knobs rotation range -60 to 165
   this.knobRot_up = 10;   // Rotation of upper knob, range is 15 to 5 int, default in vertical direction at 90 degree, from 165 to 15 degree
   this.knobRot_down = 4;   // Rotation of lower knob, range is 0 to 8 int, default in horizontal direction at 0 degree, from -60 to 60 degree
   this.speaker_size = 27;  // Speaker lines' number (size), range is 10 to 60
 
   this.knobColour = [93, 120, 185];
   this.mainColour = [255, 253, 227];
-
-  // this.chinColour = [153, 153, 51];
-  // this.lipColour = [136, 68, 68];
-  // this.eyebrowColour = [59, 95, 120];
 
   this.screenLight = ['#D9D1C7', '#F2B3D1', '#CEB3F2', '#BF946F'];
   this.screenNeutral = ['#F2D479', '#F26A1B', '#4480A6', '#485922'];
@@ -65,6 +61,7 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
+    
     this.headPosX = positions.nose_bridge[0][0]; // Use nose coordinate as center of the face
     this.headPosY = positions.nose_bridge[1][1];
     this.headWidth = 4;
@@ -74,7 +71,6 @@ function Face() {
     this.headOffset;
     this.roundCorner = 0.8; // Radius of round corner (or tangent circle's radius)
     
-
     this.antennaPos_X;
     this.antennaPos_Y = this.headPosY - this.headHeight * 0.71;
     this.antenna_size = segment_average(positions.right_eye)[0] - segment_average(positions.left_eye)[0];
@@ -84,14 +80,6 @@ function Face() {
     this.speakerPos_X;
     this.speakerPos_Y = this.headPosY + (this.headHeight * 1.25 * 1.14) / 2 - this.roundCorner * 1;
 
-    // this.headWidth = positions.chin[16][0] - positions.chin[0][0]; // Use 1st and last points of chin to get width
-    // this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; // Top nose bridge point to bottom chin point
-    // this.noseTipCenterX = positions.nose_tip[2][0]; // Center point of nose tip, to use for finding the offset of head left or right side
-    // this.topLeftCorner_X = this.headPosX - this.headWidth / 2 + this.roundCorner * 2;
-    // this.topLeftCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner * 2;
-    // this.topRightCorner_X = this.headPosX + this.headWidth / 2 - this.roundCorner * 2;
-    // this.topRightCorner_Y = this.headPosY - this.headHeight*1.25 /2 + this.roundCorner * 2;
-    
     ellipseMode(CENTER);
     rectMode(CENTER);
     angleMode(DEGREES);
@@ -126,12 +114,14 @@ function Face() {
     }
     ///////////////////////////////////////////////////////////////
 
+
     // Draw antenna (eyebrows)
-    if (this.antennaColour <= 50){
+    if (this.antennaColour <= 50){  // light colour when slider on the left, dark colour when slider on the right
         this.antennaColourCur = this.mainColour;
     } else{
         this.antennaColourCur = ['#A69B86'];
     }
+
     push();
       push();
       translate(this.antennaPos_X, this.antennaPos_Y-0.1);
@@ -162,97 +152,61 @@ function Face() {
       ellipse(this.antenna_size + this.antenna_length, 0, 0.5);
       pop();
     
-    fill(184, 182, 163);
-    arc(this.antennaPos_X, this.antennaPos_Y, this.antenna_size * 0.8, this.antenna_size * 0.5, 180, 360, CHORD);
+      fill(184, 182, 163);  // This is the base of antennas
+      arc(this.antennaPos_X, this.antennaPos_Y, this.antenna_size * 0.8, this.antenna_size * 0.5, 180, 360, CHORD);
     pop();
     ///////////////////////////////////////////////////////////////
+
 
     // Draw TV/Monitor main shape and screen
     push();
-    
-    // rect(segment_average(positions.chin)[0]+1.4, 0, 3.6, 3, 0.9);
-    // rect(segment_average(positions.chin)[0]+1, 0, 3.6, 3.5, 0.5);
-    push();
-    translate(this.headPosX, this.headPosY);
-    fill(184, 182, 163);
-    rect(0, 0, this.headWidth*1.2, this.headHeight*1.25*1.2, this.roundCorner*1.2);
-    pop();
+      push();
+      translate(this.headPosX, this.headPosY);
+      fill(184, 182, 163);
+      rect(0, 0, this.headWidth*1.2, this.headHeight*1.25*1.2, this.roundCorner*1.2);
+      pop();
 
-    push();
-    translate(this.headPosX, this.headPosY);
-    rect(0, 0, this.headWidth*1.14, this.headHeight*1.25*1.14, this.roundCorner);
-    pop();
+      push();
+      translate(this.headPosX, this.headPosY);
+      rect(0, 0, this.headWidth*1.14, this.headHeight*1.25*1.14, this.roundCorner);
+      pop();
 
-    push();
-    translate(this.headPosX + this.headOffset*0.105, this.headPosY);
-    fill(50,50,50);
-    rect(0, 0, this.headWidth*0.85, this.headHeight*1.25*1.05, this.roundCorner * 0.8);
-    pop();
+      push();
+      translate(this.headPosX + this.headOffset*0.105, this.headPosY);
+      fill(50,50,50);
+      rect(0, 0, this.headWidth*0.85, this.headHeight*1.25*1.05, this.roundCorner * 0.8);
+      pop();
 
-    push();
-    noStroke();
-    translate(this.headPosX + this.headOffset*0.105, this.headPosY);
-    fill(this.mainColour);
-    // rect(0, 0, this.headWidth*0.75, this.headHeight*1.25*0.9, this.roundCorner * 1);
-    pop();
+      push();
+      noStroke();
+      translate(this.headPosX + this.headOffset*0.105, this.headPosY);
+      fill(this.mainColour);
+      pop();
 
-    // Draw the 'Test Pattern' screen
-    push();
-    
-    noStroke();
-    fill(this.colorOption[this.screenColour][this.leftColorBar]);
-    rect(this.headPosX + this.headOffset*0.105 - 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * this.cornerOptions[this.cornerChange]);
-    fill(this.colorOption[this.screenColour][this.rightColorBar]);
-    rect(this.headPosX + this.headOffset*0.105 + 0.75, this.headPosY, this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * this.cornerOptions[this.cornerChange]);
-    fill(this.colorOption[this.screenColour][this.leftMidColorBar]);
-    rect(this.headPosX + this.headOffset*0.105 - 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89);
-    fill(this.colorOption[this.screenColour][this.rightMidColorBar]);
-    rect(this.headPosX + this.headOffset*0.105 + 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89);
-    pop();
-
-    // push();
-    // translate(this.headOffset*0.1, 0);
-    // strokeWeight(0.1);
-    // stroke(this.colorOption[this.screenColour]);
-    // for(i=0;i<=90;i+=6){
-    //   // for(j=0;j<=this.bottomLeftCorner_Y-this.topLeftCorner_Y;j+=0.5){
-    //   //   stroke(15, 107, 255, 70);
-    //   //  let a = map(j,0,this.bottomLeftCorner_Y-this.topLeftCorner_Y,65,115);
-    //       // line(this.topLeftCorner_X - sin(a) * this.roundCorner * 2 * 1.12, this.topLeftCorner_Y+j,
-    //       //  this.topRightCorner_X + this.roundCorner * 2, this.topRightCorner_Y+j*1.5);
-    //   //      line(this.topLeftCorner_X - this.roundCorner * 2, this.topLeftCorner_Y+j,
-    //   //      this.topRightCorner_X + this.roundCorner * 2, this.topRightCorner_Y+j);
-    //   //  }
-    // line(this.topLeftCorner_X-cos(i)*this.roundCorner * 2, this.topLeftCorner_Y-sin(i)*this.roundCorner * 2,
-    //       this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y-sin(i)*this.roundCorner * 2);
-     
-    // line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y+sin(i)*this.roundCorner * 2,
-    //       this.speakerPos_X+cos(i)*this.roundCorner * 2, this.speakerPos_Y+sin(i)*this.roundCorner * 2);
-    // }
-    
-    // for(i=5.5;i<=12;i+=6){
-    // line(this.topLeftCorner_X-cos(i)*this.roundCorner * 2, this.topLeftCorner_Y+sin(i)*this.roundCorner * 2,
-    //       this.topRightCorner_X+cos(i)*this.roundCorner * 2, this.topRightCorner_Y+sin(i)*this.roundCorner * 2);
-     
-    // line(this.bottomLeftCorner_X-cos(i)*this.roundCorner * 2, this.bottomLeftCorner_Y-sin(i)*this.roundCorner * 2,
-    //       this.speakerPos_X+cos(i)*this.roundCorner * 2, this.speakerPos_Y-sin(i)*this.roundCorner * 2);
-    // }
-    // pop();
+      // Draw the 'Test Pattern' screen
+      push();
+      noStroke();
+      fill(this.colorOption[this.screenColour][this.leftColorBar]);
+      rect(this.headPosX + this.headOffset*0.105 - 0.75, this.headPosY, 
+            this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * this.cornerOptions[this.cornerChange]);
+      fill(this.colorOption[this.screenColour][this.rightColorBar]);
+      rect(this.headPosX + this.headOffset*0.105 + 0.75, this.headPosY, 
+            this.headWidth*0.75*0.5, this.headHeight*1.25*0.89, this.roundCorner * this.cornerOptions[this.cornerChange]);
+      fill(this.colorOption[this.screenColour][this.leftMidColorBar]);
+      rect(this.headPosX + this.headOffset*0.105 - 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89);
+      fill(this.colorOption[this.screenColour][this.rightMidColorBar]);
+      rect(this.headPosX + this.headOffset*0.105 + 0.375, this.headPosY, this.headWidth*0.75*0.25, this.headHeight*1.25*0.89);
+      pop();
 
     pop();
     ///////////////////////////////////////////////////////////////
 
     
-
-    // Draw Knobs (eyes)
+    // Draw Knobs (nose)
     push();
-    let left_eye_pos = segment_average(positions.left_eye);
-    let right_eye_pos = segment_average(positions.right_eye);
-
-    noFill();
-    stroke(0, 7, 56);
-    // let curEyeShift = 0.04 * this.knobRot_up;
-    // if(this.num_eyes == 2) {
+      noFill();
+      stroke(0, 7, 56);
+    
       fill(this.knobColour);
       ellipse(this.knobPos_X, this.knobPos_Y_up, this.headHeight*0.3);
       ellipse(this.knobPos_X, this.knobPos_Y_down, this.headHeight*0.3);
@@ -265,104 +219,51 @@ function Face() {
       rotate(this.knobRotations[this.knobRot_up]);
       rect(0, 0, this.headHeight*0.25, this.headHeight*0.05);
       pop();
+
       push();
       translate(this.knobPos_X, this.knobPos_Y_down);
       rotate(this.knobRotations[this.knobRot_down]);
       rect(0, 0, this.headHeight*0.25, this.headHeight*0.05);
       pop();
-    // }
-    // else {
-    //   let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
-    //   let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
-
-    //   fill(this.knobColour);
-    //   ellipse(eyePosX, eyePosY, 0.45, 0.27);
-
-    //   fill(this.mainColour);
-    //   ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
-    // }
     pop();
     ///////////////////////////////////////////////////////////////
+
 
     // Draw speaker (mouth)
     push();
-    stroke(50,50,50);
-    noFill();
-    strokeWeight(0.1);
-    // rect(this.knobPos_X, this.knobPos_Y_down+1, this.headHeight*0.3, this.headWidth*0.2, 0.1);
-    // rect(this.headPosX, this.headPosY, this.headWidth*1.14, this.headHeight*1.25*1.14, this.roundCorner);
-    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 0.8, this.knobPos_X + 0.3, this.knobPos_Y_down + 0.8);
-    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 1, this.knobPos_X + 0.3, this.knobPos_Y_down + 1);
-    
-    // line(this.knobPos_X - 0.3, this.knobPos_Y_down + 1.2, this.knobPos_X + 0.3, this.knobPos_Y_down + 1.2);
-    // ellipse(this.speakerPos_X, this.speakerPos_Y, this.roundCorner * 2);
-    // stroke('red');
-    if(this.faceDirection <= 50){
-       this.speakerPos_X = this.headPosX + (this.headWidth *1.14) / 2 - this.roundCorner * 1;
+      stroke(50,50,50);
+      noFill();
+      strokeWeight(0.1);
+      
+      if(this.faceDirection <= 50){
+          this.speakerPos_X = this.headPosX + (this.headWidth *1.14) / 2 - this.roundCorner * 1;
 
-       line(this.speakerPos_X, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7, 
-          this.speakerPos_X + cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7);
+        line(this.speakerPos_X, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7, 
+              this.speakerPos_X + cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7);
 
-       for(i=0;i<this.speaker_size;i=i*1.15+16.1){
-        line(this.speakerPos_X, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7, 
-          this.speakerPos_X + cos(i)*this.roundCorner * 0.7, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7);
-          line(this.speakerPos_X, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7,
-          this.speakerPos_X + cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
-      }
-    }
-    else if(this.faceDirection > 50){      
-      this.speakerPos_X = this.headPosX - (this.headWidth *1.14) / 2 + this.roundCorner * 1;
+        for(i=0;i<this.speaker_size;i=i*1.15+16.1){
+            line(this.speakerPos_X, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7, 
+            this.speakerPos_X + cos(i)*this.roundCorner * 0.7, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7);
+            line(this.speakerPos_X, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7,
+            this.speakerPos_X + cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
+        }
+      }else if(this.faceDirection > 50){      
+        this.speakerPos_X = this.headPosX - (this.headWidth *1.14) / 2 + this.roundCorner * 1;
 
-      line(this.speakerPos_X, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7,
-          this.speakerPos_X - cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7);
+        line(this.speakerPos_X, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7,
+            this.speakerPos_X - cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(16.1)*this.roundCorner * 0.7);
 
-      for(i=0;i<this.speaker_size;i=i*1.15+16.1){
-        line(this.speakerPos_X, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7, 
-          this.speakerPos_X - cos(i)*this.roundCorner * 0.7, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7);
-          line(this.speakerPos_X, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7,
-          this.speakerPos_X - cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
-      }
-    } 
+        for(i=0;i<this.speaker_size;i=i*1.15+16.1){
+          line(this.speakerPos_X, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7, 
+            this.speakerPos_X - cos(i)*this.roundCorner * 0.7, this.speakerPos_Y + sin(i)*this.roundCorner * 0.7);
+            line(this.speakerPos_X, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7,
+            this.speakerPos_X - cos(0)*this.roundCorner * 0.7, this.speakerPos_Y - sin(i)*this.roundCorner * 0.7);
+        }
+      } 
     pop();
 
     ///////////////////////////////////////////////////////////////
 
-    
-
-    // draw the chin segment using points
-    // push();
-    // fill(this.chinColour);
-    // stroke(this.chinColour);
-    // this.draw_segment(positions.chin);
-
-    // fill(100, 0, 100);
-    // stroke(100, 0, 100);
-    // this.draw_segment(positions.nose_bridge);
-    // this.draw_segment(positions.nose_tip);
-
-    // strokeWeight(0.03);
-
-    // fill(this.lipColour);
-    // stroke(this.lipColour);
-    // this.draw_segment(positions.top_lip);
-    // this.draw_segment(positions.bottom_lip);
-    // pop();
-    
-    ///////////////////////////////////////////////////////////////
-
-    // Draw Antenna
-    push();
-    strokeWeight(0.08);
-    stroke(255);
-    // let noseTop = this.draw_segment(positions.nose_bridge);
-    // let noseBottom = this.draw_segment(positions.nose_tip);
-    // line(positions.nose_bridge[0][0], positions.nose_bridge[0][1], positions.nose_tip[2][0], positions.nose_tip[2][1]);
-    pop();
-
-    ///////////////////////////////////////////////////////////////
-   fill(0);
-  //  ellipse(0,0, 0.1,0.1); //center point
-  //  rect(-2,-2,4.5,4); //sizing debug 
   }
 
 
@@ -386,10 +287,7 @@ function Face() {
     }
   };
 
-  this.draw_head = function(){
-    
-  }
-
+  
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
     this.screenColour = int(map(settings[0], 0, 100, 0, 2));
